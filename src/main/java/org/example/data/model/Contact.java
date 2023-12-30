@@ -15,4 +15,5 @@ public class Contact {
     private Long userId;
     private String phoneNumber;
     private String name;
+    private boolean isBlock;
 }

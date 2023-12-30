@@ -1,10 +1,8 @@
 package org.example.services;
 
 import org.example.data.model.Contact;
-import org.example.dtos.request.CreateContactRequest;
-import org.example.dtos.request.EditContactRequest;
-import org.example.dtos.request.LoginRequest;
-import org.example.dtos.request.RegisterRequest;
+import org.example.data.model.ContactApp;
+import org.example.dtos.request.*;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -18,4 +16,13 @@ public interface UserService {
     void edit(EditContactRequest editContactRequest);
     Contact findContactFor(long userId, String contactName);
     List<Contact> findAllContactFor(Long userId);
+    void editProfile(EditProfile editProfile);
+    ContactApp viewProfile(Long userId);
+    void deleteContact(Long userId, String contactName);
+    void deleteAll(Long userId);
+    void deleteAccount(Long userId);
+    void resetPassword(Long userId, String oldPassword, String newPassword);
+    void resetEmail(Long userId, String oldEmail, String newMail);
+    void blockContact(Long userId, String contactName);
+    void unBlockContact(Long userId, String contactName);
 }

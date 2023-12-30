@@ -18,4 +18,13 @@ public class ContactApp {
     private String password;
     private String phoneNumber;
     private boolean isLogOut = true;
+    @Override
+    public String toString(){
+        return String.format("""
+                Full Name: %s_%s
+                Email: %s
+                PhoneNumber: %s
+                """, firstName, lastName, email, phoneNumber);
+    }
+
 }

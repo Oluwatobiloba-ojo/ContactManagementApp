@@ -11,4 +11,8 @@ public interface ContactService {
     List<Contact> findAllContactFor(Long id);
     void editContact(EditContactRequest editContactRequest);
     Contact findContact(Long userId, String contactName);
+    void delete(Long userId, String contactName);
+    void deleteAllFor(Long id);
+    void blockContact(Long userId, String contactName);
+    void unBlockContact(Long userId, String contactName);
 }

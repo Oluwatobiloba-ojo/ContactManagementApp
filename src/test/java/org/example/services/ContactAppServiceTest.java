@@ -1,25 +1,23 @@
 package org.example.services;
 
+import jakarta.transaction.Transactional;
 import org.example.data.repository.ContactAppRepository;
 import org.example.data.repository.ContactRepository;
-import org.example.dtos.request.CreateContactRequest;
-import org.example.dtos.request.EditContactRequest;
-import org.example.dtos.request.LoginRequest;
-import org.example.dtos.request.RegisterRequest;
-import org.example.exceptions.ContactExistException;
-import org.example.exceptions.InvalidFormatDetails;
-import org.example.exceptions.InvalidLoginDetails;
-import org.example.exceptions.UserExistException;
+import org.example.dtos.request.*;
+import org.example.exceptions.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
+@TestPropertySource(locations = "classpath:test.properties")
+@Transactional
 class ContactAppServiceTest {
     @Autowired
     private UserService userService;
@@ -153,6 +151,58 @@ class ContactAppServiceTest {
        Long firstUserId = userService.register(registerRequest);
        loginRequest.setId(firstUserId);
        userService.logIn(loginRequest);
+       EditProfile editProfile = new EditProfile();
+       editProfile.setUserId(firstUserId);
+       editProfile.setLastName("Olamiposi");
+       editProfile.setPhoneNumber("08129810794");
+       userService.editProfile(editProfile);
+       assertEquals("Olamiposi", userService.viewProfile(firstUserId).getLastName());
+       assertEquals("08129810794", userService.viewProfile(firstUserId).getPhoneNumber());
     }
-
+    @Test
+    public void testThatUserSaveTwoContactDeleteOneOfContact_FindAllContactForUserSizeIsOne(){
+        Long firstUserId = userService.register(registerRequest);
+        loginRequest.setId(firstUserId);
+        userService.logIn(loginRequest);
+        CreateContactRequest createContactRequest = new CreateContactRequest();
+        createContactRequest.setUserId(firstUserId);
+        createContactRequest.setPhoneNumber("+2348032389457");
+        createContactRequest.setName("Ola wale");
+        userService.createContact(createContactRequest);
+        createContactRequest.setName("Ope");
+        userService.createContact(createContactRequest);
+        assertEquals(2, userService.findAllContactFor(firstUserId).size());
+        userService.deleteContact(firstUserId, "Ola wale");
+        assertEquals(1, userService.findAllContactFor(firstUserId).size());
+        assertThrows(InvalidContactDetail.class, ()-> userService.deleteContact(firstUserId, "Ola wale"));
+    }
+    @Test
+    public void testThatWhenAUserDoesNotHaveContactButDeleteAllContactThrowsException(){
+        Long firstUserId = userService.register(registerRequest);
+        loginRequest.setId(firstUserId);
+        userService.logIn(loginRequest);
+        assertThrows(InvalidContactDetail.class, ()-> userService.deleteAll(firstUserId));
+    }
+    @Test
+    public void testThatUserCanDeleteAccountAndWhenUserWantToViewProfileThrowException(){
+        Long firstUserId = userService.register(registerRequest);
+        loginRequest.setId(firstUserId);
+        userService.logIn(loginRequest);
+        userService.deleteAccount(firstUserId);
+        assertThrows(UserExistException.class, ()-> userService.viewProfile(firstUserId));
+    }
+    @Test
+    public void testThatWhenUserProvideWrongOldPasswordToResetPasswordThrowException(){
+        Long firstUserId = userService.register(registerRequest);
+        loginRequest.setId(firstUserId);
+        userService.logIn(loginRequest);
+        assertThrows(InvalidFormatDetails.class,()-> userService.resetPassword(firstUserId, "wrongPassword", "newPassword"));
+    }
+    @Test
+    public void testThatWhenUserProvideWrongOldEmailToResetEmailThrowsException(){
+        Long firstUserId = userService.register(registerRequest);
+        loginRequest.setId(firstUserId);
+        userService.logIn(loginRequest);
+        assertThrows(InvalidFormatDetails.class, ()-> userService.resetEmail(firstUserId, "wrongEmail", "oluwatobi@gmail.com"));
+    }
 }

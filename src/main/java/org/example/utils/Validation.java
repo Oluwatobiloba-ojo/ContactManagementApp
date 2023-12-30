@@ -7,6 +7,6 @@ public class Validation {
     public static boolean validatePhoneNumber(String phoneNumber) {
         if (phoneNumber.startsWith("+"))return phoneNumber.matches("[+1-9][0-9]{6,13}");
         else return phoneNumber.matches("0[7-9][0-1][0-9]{8}");}
-    public static boolean validatePassword(String password) {return password.matches("[A-Z][a-zA-Z0-9/@ _-|?}{#$^><:()+*&%]{8,20}");}
+    public static boolean validatePassword(String password) {return password.matches("[A-Z][a-zA-Z]{4,}[0-9/@ _-|?}{#$^><:()+*&%]+");}
 
 }
