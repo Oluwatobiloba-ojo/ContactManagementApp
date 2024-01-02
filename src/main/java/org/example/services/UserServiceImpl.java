@@ -1,5 +1,4 @@
 package org.example.services;
-
 import org.example.data.model.Contact;
 import org.example.data.model.ContactApp;
 import org.example.data.repository.ContactAppRepository;
@@ -8,9 +7,7 @@ import org.example.exceptions.*;
 import org.example.utils.EncryptPassword;
 import org.example.utils.Validation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.saml2.Saml2RelyingPartyProperties;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -166,13 +163,10 @@ public class UserServiceImpl implements UserService {
         if (contactApp.isLogOut()) throw new InvalidLoginDetails("User have not login");
         contactService.unBlockContact(userId, contactName);
     }
-
     private boolean userDoesNotExist(String email) {
         ContactApp contactApp = contactAppRepository.findByEmail(email);
         return contactApp != null;
     }
-
-
 
 
 }
