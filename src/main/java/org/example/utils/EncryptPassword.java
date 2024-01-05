@@ -37,7 +37,6 @@ public class EncryptPassword {
         byte[] securePassword = hash(password.toCharArray(), salt.getBytes());
         return Base64.getEncoder().encodeToString(securePassword) + salt;
     }
-
     public static boolean verifyPassword(String newPassword, String oldPassword) {
         String salt = "";
         for (int count = oldPassword.length() -1; count >= oldPassword.length() - length; count--) {
@@ -46,5 +45,4 @@ public class EncryptPassword {
         String secureNewPassword = generateHashPassword(newPassword, salt);
         return secureNewPassword.equalsIgnoreCase(oldPassword);
     }
-
 }

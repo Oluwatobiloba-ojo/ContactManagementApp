@@ -7,6 +7,7 @@ import org.example.exceptions.ActionDoneException;
 import org.example.exceptions.ContactExistException;
 import org.example.exceptions.InvalidContactDetail;
 import org.example.exceptions.InvalidFormatDetails;
+import org.example.utils.Mapper;
 import org.example.utils.Validation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,10 +22,7 @@ public class ContactServiceImpl implements ContactService{
     @Override
     public void create(Long userId, String phoneNumber, String name) {
         if (contactExist(name, userId)) throw new ContactExistException("Contact Already Exist");
-        Contact newContact = new Contact();
-        newContact.setUserId(userId);
-        newContact.setName(name);
-        newContact.setPhoneNumber(phoneNumber);
+        Contact newContact = Mapper.mapToContact(userId, name, phoneNumber);
         contactRepository.save(newContact);
     }
     private boolean contactExist(String name, Long id) {
@@ -48,12 +46,18 @@ public class ContactServiceImpl implements ContactService{
     public void editContact(EditContactRequest editContactRequest) {
         if (!contactExist(editContactRequest.getName(), editContactRequest.getUserId()))throw new ContactExistException("Contact does not exist");
         Contact contact = findContact(editContactRequest.getUserId(), editContactRequest.getName());
-        if (editContactRequest.getNewContactNumber() != null){
-            if (!Validation.validatePhoneNumber(editContactRequest.getNewContactNumber())) throw new InvalidFormatDetails("Invalid format for phone number");
-            contact.setPhoneNumber(editContactRequest.getNewContactNumber());}
+        editPhoneNumber(editContactRequest, contact);
         if (editContactRequest.getNewContactName() != null) contact.setName(editContactRequest.getName());
         contactRepository.save(contact);
     }
+
+    private static void editPhoneNumber(EditContactRequest editContactRequest, Contact contact) {
+        if (editContactRequest.getNewContactNumber() != null){
+            if (!Validation.validatePhoneNumber(editContactRequest.getNewContactNumber())) throw new InvalidFormatDetails("Invalid format for phone number");
+            contact.setPhoneNumber(editContactRequest.getNewContactNumber());
+        }
+    }
+
     @Override
     public Contact findContact(Long userId, String name) {
        List<Contact> contactList = findAllContactFor(userId);

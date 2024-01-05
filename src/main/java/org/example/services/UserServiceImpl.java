@@ -5,6 +5,7 @@ import org.example.data.repository.ContactAppRepository;
 import org.example.dtos.request.*;
 import org.example.exceptions.*;
 import org.example.utils.EncryptPassword;
+import org.example.utils.Mapper;
 import org.example.utils.Validation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,14 +25,9 @@ public class UserServiceImpl implements UserService {
         if (!Validation.validateEmail(registerRequest.getEmail())) throw new InvalidFormatDetails("Invalid email");
         if (!Validation.validatePhoneNumber(registerRequest.getPhoneNumber())) throw new InvalidFormatDetails("invalid phone number phone format is +(country code),(national number)");
         if (!Validation.validatePassword(registerRequest.getPassword())) throw new InvalidFormatDetails("Weak password");
-        ContactApp contactApp = new ContactApp();
-        contactApp.setEmail(registerRequest.getEmail());
-        contactApp.setFirstName(registerRequest.getFirstName());
-        contactApp.setLastName(registerRequest.getLastName());
-        contactApp.setPhoneNumber(registerRequest.getPhoneNumber());
-        contactApp.setPassword(EncryptPassword.generateHashPassword(registerRequest.getPassword(), EncryptPassword.getSaltValue()));
-        contactAppRepository.save(contactApp);
-        return contactApp.getId();
+       ContactApp contactApp = Mapper.mapToContactApp(registerRequest);
+       contactAppRepository.save(contactApp);
+       return contactApp.getId();
     }
 
     @Override
@@ -167,6 +163,4 @@ public class UserServiceImpl implements UserService {
         ContactApp contactApp = contactAppRepository.findByEmail(email);
         return contactApp != null;
     }
-
-
 }
