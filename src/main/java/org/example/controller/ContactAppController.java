@@ -3,7 +3,7 @@ package org.example.controller;
 import org.example.dtos.request.*;
 import org.example.dtos.response.*;
 import org.example.exceptions.ContactAppException;
-import org.example.services.UserService;
+import org.example.services.ContactAppService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.*;
 public class ContactAppController {
 
     @Autowired
-    private UserService userService;
+    private ContactAppService contactAppService;
 
     @PostMapping("/users")
     public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {
         RegisterResponse registerResponse = new RegisterResponse();
         try {
-            Long userId = userService.register(registerRequest);
+            Long userId = contactAppService.register(registerRequest);
             registerResponse.setUserId(userId);
             registerResponse.setMessage("Account has been created");
             return new ResponseEntity<>(new ApiResponse(registerResponse, true), HttpStatus.CREATED);
@@ -33,7 +33,7 @@ public class ContactAppController {
         LoginResponse loginResponse = new LoginResponse();
         LoginRequest loginRequest = new LoginRequest(userId, password);
         try {
-            userService.logIn(loginRequest);
+            contactAppService.logIn(loginRequest);
             loginResponse.setMessage("You na don Login !!!!!!");
             return new ResponseEntity<>(new ApiResponse(loginResponse, true), HttpStatus.ACCEPTED);
         } catch (ContactAppException contactAppException) {
@@ -45,7 +45,7 @@ public class ContactAppController {
     public ResponseEntity<?> createContact(@RequestBody CreateContactRequest createContactRequest) {
         CreateContactResponse createContactResponse = new CreateContactResponse();
         try {
-            userService.createContact(createContactRequest);
+            contactAppService.createContact(createContactRequest);
             createContactResponse.setMessage("Contact already created");
             return new ResponseEntity<>(new ApiResponse(createContactResponse, true), HttpStatus.OK);
         } catch (ContactAppException exception) {
@@ -58,7 +58,7 @@ public class ContactAppController {
     public ResponseEntity<?> editContact(@RequestBody EditContactRequest editContactRequest) {
         EditContactResponse editContactResponse = new EditContactResponse();
         try {
-            userService.edit(editContactRequest);
+            contactAppService.edit(editContactRequest);
             editContactResponse.setMessage("Contact Has been Updated");
             return new ResponseEntity<>(new ApiResponse(editContactResponse, true), HttpStatus.OK);
         } catch (ContactAppException exception) {
@@ -71,7 +71,7 @@ public class ContactAppController {
     public ResponseEntity<?> editProfile(@RequestBody EditProfile editProfile) {
         EditProfileResponse editProfileResponse = new EditProfileResponse();
         try {
-            userService.editProfile(editProfile);
+            contactAppService.editProfile(editProfile);
             editProfileResponse.setMessage("Profile Of User Has been updated");
             return new ResponseEntity<>(new ApiResponse(editProfileResponse, true), HttpStatus.OK);
         } catch (ContactAppException exception) {
@@ -84,7 +84,7 @@ public class ContactAppController {
     public ResponseEntity<?> viewAllContact(@PathVariable("userId") Long userId) {
         ViewContactsResponse allContactResponse = new ViewContactsResponse();
         try {
-            allContactResponse.setContact(userService.findAllContactFor(userId));
+            allContactResponse.setContact(contactAppService.findAllContactFor(userId));
             return new ResponseEntity<>(new ApiResponse(allContactResponse, true), HttpStatus.CREATED);
         } catch (ContactAppException exception) {
             return new ResponseEntity<>(new ApiResponse(exception.getMessage(), false), HttpStatus.BAD_REQUEST);
@@ -94,7 +94,7 @@ public class ContactAppController {
     public ResponseEntity<?> viewAContact(@PathVariable("userId") Long userId, @RequestParam(name = "contactName") String contactName) {
         ViewContactResponse contactResponse = new ViewContactResponse();
         try {
-            contactResponse.setContact(userService.findContactFor(userId, contactName));
+            contactResponse.setContact(contactAppService.findContactFor(userId, contactName));
             return new ResponseEntity<>(new ApiResponse(contactResponse, true), HttpStatus.OK);
         } catch (ContactAppException contactAppException) {
             return new ResponseEntity<>(new ApiResponse(contactAppException.getMessage(), false), HttpStatus.BAD_REQUEST);
@@ -104,7 +104,7 @@ public class ContactAppController {
     public ResponseEntity<?> viewUser(@PathVariable("userId") Long userId){
         ViewProfileResponse viewProfileResponse = new ViewProfileResponse();
         try{
-            viewProfileResponse.setUser(userService.viewProfile(userId));
+            viewProfileResponse.setUser(contactAppService.viewProfile(userId));
             return new ResponseEntity<>(new ApiResponse(viewProfileResponse, true), HttpStatus.OK);
         }catch (ContactAppException exception){
             return new ResponseEntity<>(new ApiResponse(exception.getMessage(), false), HttpStatus.BAD_REQUEST);
@@ -114,7 +114,7 @@ public class ContactAppController {
     public ResponseEntity<?> resetPassword(@PathVariable("userId") Long userId, @RequestBody ResetPasswordRequest request){
        ResetPasswordResponse response = new ResetPasswordResponse();
         try {
-           userService.resetPassword(userId, request.getOldPassword(), request.getNewPassword());
+           contactAppService.resetPassword(userId, request.getOldPassword(), request.getNewPassword());
            response.setMessage("Password has been updated");
            return new ResponseEntity<>(new ApiResponse(response, true), HttpStatus.OK);
        }catch (ContactAppException exception){
@@ -126,7 +126,7 @@ public class ContactAppController {
     public ResponseEntity<?> resetEmail(@PathVariable("userId") Long userId, @RequestBody ResetEmailRequest request){
         ResetEmailResponse response = new ResetEmailResponse();
         try {
-            userService.resetEmail(userId, request.getOldEmail(), request.getNewEmail());
+            contactAppService.resetEmail(userId, request.getOldEmail(), request.getNewEmail());
             response.setMessage("Email has been reset");
             return new ResponseEntity<>(new ApiResponse(response, true), HttpStatus.OK);
         }catch (ContactAppException exception){
@@ -138,7 +138,7 @@ public class ContactAppController {
     public ResponseEntity<?> deleteContact(@PathVariable("userId") Long userId, @RequestParam(name = "contactName") String contactName){
         DeleteContactResponse response = new DeleteContactResponse();
         try{
-            userService.deleteContact(userId, contactName);
+            contactAppService.deleteContact(userId, contactName);
             response.setMessage(contactName + " has been deleted from your account");
             return new ResponseEntity<>(new ApiResponse(response, true), HttpStatus.OK);
         }catch (ContactAppException exception){
@@ -150,7 +150,7 @@ public class ContactAppController {
     public ResponseEntity<?> deleteAllContact(@PathVariable("userId") Long userId){
         DeleteAllContactResponse response = new DeleteAllContactResponse();
         try {
-            userService.deleteAll(userId);
+            contactAppService.deleteAll(userId);
             response.setMessage("All Contact Deleted successfully");
             return new ResponseEntity<>(new ApiResponse(response, true), HttpStatus.OK);
         }catch (ContactAppException exception){
@@ -162,7 +162,7 @@ public class ContactAppController {
     public ResponseEntity<?> deleteAccount(@PathVariable("userId") Long userId){
         DeleteAccountResponse response = new DeleteAccountResponse();
         try {
-            userService.deleteAccount(userId);
+            contactAppService.deleteAccount(userId);
             response.setMessage("Account has been deleted......");
             return new ResponseEntity<>(new ApiResponse(response, true), HttpStatus.OK);
         }catch (ContactAppException exception){
@@ -174,7 +174,7 @@ public class ContactAppController {
     public ResponseEntity<?> blockContact(@PathVariable("userId") Long userId, @RequestParam(name = "contactName") String contactName){
         BlockContactResponse response = new BlockContactResponse();
         try {
-          userService.blockContact(userId, contactName);
+          contactAppService.blockContact(userId, contactName);
           response.setMessage(contactName + " is blocked");
           return new ResponseEntity<>(new ApiResponse(response, true), HttpStatus.OK);
         }catch (ContactAppException exception){
@@ -186,7 +186,7 @@ public class ContactAppController {
     public ResponseEntity<?> unBlockContact(@PathVariable("userId") Long userId, @RequestParam(name = "contactName") String contactName){
         UnBlockContactResponse response = new UnBlockContactResponse();
         try {
-            userService.unBlockContact(userId, contactName);
+            contactAppService.unBlockContact(userId, contactName);
             response.setMessage(contactName + " has been unblocked");
             return new ResponseEntity<>(new ApiResponse(response, true), HttpStatus.OK);
         }catch (ContactAppException exception){

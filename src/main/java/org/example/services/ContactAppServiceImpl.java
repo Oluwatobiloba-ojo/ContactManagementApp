@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class ContactAppServiceImpl implements ContactAppService {
     @Autowired
     private ContactAppRepository contactAppRepository;
     @Autowired

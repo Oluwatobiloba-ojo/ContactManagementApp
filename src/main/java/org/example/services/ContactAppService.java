@@ -3,13 +3,11 @@ package org.example.services;
 import org.example.data.model.Contact;
 import org.example.data.model.ContactApp;
 import org.example.dtos.request.*;
-import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.List;
 
 
-public interface UserService {
+public interface ContactAppService {
     Long register(RegisterRequest registerRequest);
     void logIn(LoginRequest loginRequest);
     void createContact(CreateContactRequest createContactRequest);
