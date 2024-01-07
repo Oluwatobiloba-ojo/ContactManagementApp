@@ -46,7 +46,7 @@ public class ContactAppServiceImpl implements ContactAppService {
         if (userExist(createContactRequest.getUserId()).isEmpty()) throw new InvalidLoginDetails("Invalid Details");
         ContactApp contactApp = userExist(createContactRequest.getUserId()).get();
         if (contactApp.isLogOut()) throw  new InvalidLoginDetails("Have not logIn");
-        if (!Validation.validatePhoneNumber(createContactRequest.getPhoneNumber())) throw new InvalidFormatDetails("Invalid format foe phone number");
+        if (!Validation.validatePhoneNumber(createContactRequest.getPhoneNumber())) throw new InvalidFormatDetails("Invalid format for phone number");
         contactService.create(contactApp.getId(), createContactRequest.getPhoneNumber(), createContactRequest.getName());
     }
 
