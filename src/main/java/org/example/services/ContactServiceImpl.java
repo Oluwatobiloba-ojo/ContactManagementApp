@@ -81,6 +81,7 @@ public class ContactServiceImpl implements ContactService{
     @Override
     public void blockContact(Long userId, String contactName) {
         Contact contact = findContact(userId, contactName);
+        if (contact == null) throw new InvalidContactDetail("Contact does not exist");
         if (contact.isBlock()) throw new ActionDoneException("The contact has been blocked already");
         contact.setBlock(true);
         contactRepository.save(contact);
@@ -88,6 +89,7 @@ public class ContactServiceImpl implements ContactService{
     @Override
     public void unBlockContact(Long userId, String contactName) {
           Contact contact = findContact(userId, contactName);
+          if (contact == null) throw new InvalidContactDetail("Contact does not exist");
           if (!contact.isBlock()) throw new ActionDoneException("The contact is not blocked");
           contact.setBlock(false);
           contactRepository.save(contact);

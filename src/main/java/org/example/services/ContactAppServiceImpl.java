@@ -46,7 +46,7 @@ public class ContactAppServiceImpl implements ContactAppService {
         if (userExist(createContactRequest.getUserId()).isEmpty()) throw new InvalidLoginDetails("Invalid Details");
         ContactApp contactApp = userExist(createContactRequest.getUserId()).get();
         if (contactApp.isLogOut()) throw  new InvalidLoginDetails("Have not logIn");
-        if (!Validation.validatePhoneNumber(createContactRequest.getPhoneNumber())) throw new InvalidFormatDetails("Invalid format for phone number");
+        if (!Validation.validatePhoneNumber(createContactRequest.getPhoneNumber())) throw new InvalidFormatDetails("Invalid format fortor phone number");
         contactService.create(contactApp.getId(), createContactRequest.getPhoneNumber(), createContactRequest.getName());
     }
 
@@ -131,7 +131,7 @@ public class ContactAppServiceImpl implements ContactAppService {
         if (contactApp.isLogOut()) throw new InvalidLoginDetails("User have not login");
         if (!EncryptPassword.verifyPassword(oldPassword, contactApp.getPassword())) throw new InvalidFormatDetails("Password verification was wrong");
         if (!Validation.validatePassword(newPassword)) throw new InvalidFormatDetails("Password is weak");
-        contactApp.setPassword(newPassword);
+        contactApp.setPassword(EncryptPassword.generateHashPassword(newPassword, EncryptPassword.getSaltValue()));
         contactAppRepository.save(contactApp);
     }
 
