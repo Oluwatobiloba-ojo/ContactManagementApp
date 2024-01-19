@@ -18,7 +18,6 @@ public class ContactAppServiceImpl implements ContactAppService {
     private ContactAppRepository contactAppRepository;
     @Autowired
     private ContactService contactService;
-
     @Override
     public Long register(RegisterRequest registerRequest) {
         if (userDoesNotExist(registerRequest.getEmail())) throw new UserExistException("User already exist");
@@ -29,7 +28,6 @@ public class ContactAppServiceImpl implements ContactAppService {
        contactAppRepository.save(contactApp);
        return contactApp.getId();
     }
-
     @Override
     public void logIn(LoginRequest loginRequest) {
         if (userExist(loginRequest.getId()).isEmpty()) throw new InvalidLoginDetails("Invalid Details");
