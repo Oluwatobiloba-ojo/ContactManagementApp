@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/request")
+@RequestMapping("/api/request")
 public class ContactAppController {
 
     @Autowired
@@ -29,7 +29,7 @@ public class ContactAppController {
         }
     }
     @PostMapping("/user/{userId}")
-    public ResponseEntity<?> login(@PathVariable("userId") Long userId, @RequestParam(name = "password") String password) {
+    public ResponseEntity<?> login(@PathVariable("userId") Long userId, @RequestParam String password) {
         LoginResponse loginResponse = new LoginResponse();
         LoginRequest loginRequest = new LoginRequest(userId, password);
         try {
