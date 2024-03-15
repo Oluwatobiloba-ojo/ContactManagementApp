@@ -1,8 +1,10 @@
 package org.example.dtos.response;
 
 import lombok.Data;
+import org.example.data.model.ContactApp;
 
 @Data
 public class ViewProfileResponse {
-    private Object User;
+    private ContactApp User;
+    private String message;
 }

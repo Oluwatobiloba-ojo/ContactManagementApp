@@ -80,7 +80,7 @@ class ContactAppServiceTest {
     }
     @Test
     public void testThatContactAppCanAddContactAndContactRepositoryIsOne(){
-        Long id = contactAppService.register(registerRequest);
+        Long id = contactAppService.register(registerRequest).getUserId();
         loginRequest.setId(id);
         contactAppService.logIn(loginRequest);
         CreateContactRequest createContactRequest = new CreateContactRequest();
@@ -92,7 +92,7 @@ class ContactAppServiceTest {
     }
     @Test
     public void testThatWhenWeRegister_LogIn_TryToAddTwoContactWithSameNameThrowsException(){
-       Long id = contactAppService.register(registerRequest);
+       Long id = contactAppService.register(registerRequest).getUserId();
        loginRequest.setId(id);
        contactAppService.logIn(loginRequest);
        CreateContactRequest createContactRequest = new CreateContactRequest();
@@ -104,7 +104,7 @@ class ContactAppServiceTest {
     }
     @Test
     public void testThatWhenAUserWantToEditPhoneNumberInSavedContactItSetThePhoneNumberToNewValue(){
-        Long id = contactAppService.register(registerRequest);
+        Long id = contactAppService.register(registerRequest).getUserId();
         loginRequest.setId(id);
         contactAppService.logIn(loginRequest);
         CreateContactRequest createContactRequest = new CreateContactRequest();
@@ -117,13 +117,13 @@ class ContactAppServiceTest {
         editContactRequest.setName("Ola wale");
         editContactRequest.setNewContactNumber("+2348029810794");
         contactAppService.edit(editContactRequest);
-        assertEquals(editContactRequest.getNewContactNumber(), contactAppService.findContactFor(id, "Ola wale").getPhoneNumber());
+        assertEquals(editContactRequest.getNewContactNumber(), contactAppService.findContactFor(id, "Ola wale").getContact().getPhoneNumber());
     }
     @Test
     public void testThatWhenTwoUserFindContactBelongingToThemTheSizeIsAmountOfWhatTheySaveOnTheirContact(){
-        Long firstUserId = contactAppService.register(registerRequest);
+        Long firstUserId = contactAppService.register(registerRequest).getUserId();
         registerRequest.setEmail("oluwatobi23@gmail.com");
-        Long secondUserId = contactAppService.register(registerRequest);
+        Long secondUserId = contactAppService.register(registerRequest).getUserId();
         loginRequest.setId(firstUserId);
         contactAppService.logIn(loginRequest);
         loginRequest.setId(secondUserId);
@@ -139,12 +139,12 @@ class ContactAppServiceTest {
         createContactRequest.setName("Oluwatobi");
         contactAppService.createContact(createContactRequest);
         assertEquals(3, contactRepository.findAll().size());
-        assertEquals(1, contactAppService.findAllContactFor(secondUserId).size());
-        assertEquals(2, contactAppService.findAllContactFor(firstUserId).size());
+        assertEquals(1, contactAppService.findAllContactFor(secondUserId).getContact().size());
+        assertEquals(2, contactAppService.findAllContactFor(firstUserId).getContact().size());
     }
     @Test
     public void testThatUserCanEditTheirProfile(){
-       Long firstUserId = contactAppService.register(registerRequest);
+       Long firstUserId = contactAppService.register(registerRequest).getUserId();
        loginRequest.setId(firstUserId);
        contactAppService.logIn(loginRequest);
        EditProfile editProfile = new EditProfile();
@@ -152,12 +152,12 @@ class ContactAppServiceTest {
        editProfile.setLastName("Olamiposi");
        editProfile.setPhoneNumber("08129810794");
        contactAppService.editProfile(editProfile);
-       assertEquals("Olamiposi", contactAppService.viewProfile(firstUserId).getLastName());
-       assertEquals("08129810794", contactAppService.viewProfile(firstUserId).getPhoneNumber());
+       assertEquals("Olamiposi", contactAppService.viewProfile(firstUserId).getUser().getLastName());
+       assertEquals("08129810794", contactAppService.viewProfile(firstUserId).getUser().getPhoneNumber());
     }
     @Test
     public void testThatUserSaveTwoContactDeleteOneOfContact_FindAllContactForUserSizeIsOne(){
-        Long firstUserId = contactAppService.register(registerRequest);
+        Long firstUserId = contactAppService.register(registerRequest).getUserId();
         loginRequest.setId(firstUserId);
         contactAppService.logIn(loginRequest);
         CreateContactRequest createContactRequest = new CreateContactRequest();
@@ -167,21 +167,21 @@ class ContactAppServiceTest {
         contactAppService.createContact(createContactRequest);
         createContactRequest.setName("Ope");
         contactAppService.createContact(createContactRequest);
-        assertEquals(2, contactAppService.findAllContactFor(firstUserId).size());
+        assertEquals(2, contactAppService.findAllContactFor(firstUserId).getContact().size());
         contactAppService.deleteContact(firstUserId, "Ola wale");
-        assertEquals(1, contactAppService.findAllContactFor(firstUserId).size());
+        assertEquals(1, contactAppService.findAllContactFor(firstUserId).getContact().size());
         assertThrows(InvalidContactDetail.class, ()-> contactAppService.deleteContact(firstUserId, "Ola wale"));
     }
     @Test
     public void testThatWhenAUserDoesNotHaveContactButDeleteAllContactThrowsException(){
-        Long firstUserId = contactAppService.register(registerRequest);
+        Long firstUserId = contactAppService.register(registerRequest).getUserId();
         loginRequest.setId(firstUserId);
         contactAppService.logIn(loginRequest);
         assertThrows(InvalidContactDetail.class, ()-> contactAppService.deleteAll(firstUserId));
     }
     @Test
     public void testThatUserCanDeleteAccountAndWhenUserWantToViewProfileThrowException(){
-        Long firstUserId = contactAppService.register(registerRequest);
+        Long firstUserId = contactAppService.register(registerRequest).getUserId();
         loginRequest.setId(firstUserId);
         contactAppService.logIn(loginRequest);
         contactAppService.deleteAccount(firstUserId);
@@ -189,14 +189,14 @@ class ContactAppServiceTest {
     }
     @Test
     public void testThatWhenUserProvideWrongOldPasswordToResetPasswordThrowException(){
-        Long firstUserId = contactAppService.register(registerRequest);
+        Long firstUserId = contactAppService.register(registerRequest).getUserId();
         loginRequest.setId(firstUserId);
         contactAppService.logIn(loginRequest);
         assertThrows(InvalidFormatDetails.class,()-> contactAppService.resetPassword(firstUserId, "wrongPassword", "newPassword"));
     }
     @Test
     public void testThatWhenUserProvideWrongOldEmailToResetEmailThrowsException(){
-        Long firstUserId = contactAppService.register(registerRequest);
+        Long firstUserId = contactAppService.register(registerRequest).getUserId();
         loginRequest.setId(firstUserId);
         contactAppService.logIn(loginRequest);
         assertThrows(InvalidFormatDetails.class, ()-> contactAppService.resetEmail(firstUserId, "wrongEmail", "oluwatobi@gmail.com"));
