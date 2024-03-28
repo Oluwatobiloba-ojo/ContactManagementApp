@@ -1,13 +1,13 @@
 package org.example.config.securityconfig;
 
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+//import org.springframework.security.core.userdetails.UserDetails;
+//import org.springframework.security.core.userdetails.UserDetailsService;
+//import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-public class UserDetailService implements UserDetailsService {
+public class UserDetailService  {
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return null;
-    }
+//    @Override
+//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//        return null;
+//    }
 }
