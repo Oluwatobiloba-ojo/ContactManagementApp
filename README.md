@@ -1,8 +1,24 @@
 # ContactManagement Web Management
 
+# Table Of Content
+* [Introduction](#Introduction)
+* [SetUp](#Set-Up)
+* [Features](#features)
+* [End_Point](#end-point)
+
 # Introduction
 This contact management application is an application which helps you to organize your contact into a group with their name and phone number and can be found and the aim of this contact mangemeant is to aid any firm in storing and retrieving all information about a pre-existing client in a more robust and efficient manner
 This application is built using maven framework (spring-boot) and java for the backend application.
+
+# Set-Up
+* install git
+* Install mySql for proper database functions
+* Clone the project by following the cloning process
+* Ensure your project is on the right server port
+* install jdk version 21
+* Click on this link (https://github.com/Oluwatobiloba-ojo/ContactManagementApp.git)
+* Open your Post man Application, paste the accurate url on the given url space
+* Ensure all dependencies in the above project are well injected in your pom.xml
 
 # Features
 
