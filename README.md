@@ -4,7 +4,7 @@
 * [Introduction](#Introduction)
 * [SetUp](#Set-Up)
 * [Features](#features)
-* [End_Point](#end-point)
+* [End Point](#end-point)
 
 # Introduction
 This contact management application is an application which helps you to organize your contact into a group with their name and phone number and can be found and the aim of this contact mangemeant is to aid any firm in storing and retrieving all information about a pre-existing client in a more robust and efficient manner
