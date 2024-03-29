@@ -76,7 +76,8 @@ _successful request and response_
 ```
 JSON:
     {"response":{
-                   "userId":49,"message":"Account has been created"
+                   "userId":49,
+                   "message":"Account has been created"
     },
     "successful": true
     }
