@@ -40,7 +40,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Docker image
-        run: docker build -t ojooluwatobi/contactManager:latest .
+        run: docker build -t ojooluwatobi/contactmanager:latest .
 
       - name: Push Docker image to Docker Hub
-        run: docker push ojooluwatobi/contactManager:latest
+        run: docker push ojooluwatobi/contactmanager:latest
