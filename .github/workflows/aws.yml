@@ -24,8 +24,8 @@ jobs:
 
     - name: Build and push Docker image
       run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/your-docker-image:latest .
-        docker push ${{ secrets.DOCKER_USERNAME }}/your-docker-image:latest
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/contactmanagement:latest .
+        docker push ${{ secrets.DOCKER_USERNAME }}/contactmanagement:latest
 
     - name: Install AWS CLI
       run: |
@@ -35,12 +35,7 @@ jobs:
     - name: Create SSH key file
       run: |
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > key.pem
-        chmod 600 key.pem
-
-    - name: Create SSH key file with multiline handling
-      run: |
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > key.pem
-        chmod 600 key.pem
+        chmod 400 key.pem
         
     - name: Deploy to EC2
       env:
