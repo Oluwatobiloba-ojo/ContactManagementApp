@@ -60,8 +60,8 @@ jobs:
                       sudo systemctl start docker
                       sudo usermod -aG docker ${INSTANCE_USER}
                       sudo systemctl enable docker
-                      echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin
-                      docker pull $DOCKER_USERNAME/contactmanagement:latest
-                      docker run -d $DOCKER_USERNAME/contactmanagement:latest"
+                      echo $DOCKER_PASSWORD | sudo docker login --username $DOCKER_USERNAME --password-stdin
+                      sudo docker pull $DOCKER_USERNAME/contactmanagement:latest
+                      sudo docker run -d $DOCKER_USERNAME/contactmanagement:latest"
 
         ssh -o StrictHostKeyChecking=no -i $GITHUB_WORKSPACE/key.pem $INSTANCE_USER@$PUBLIC_DNS "$SSH_COMMANDS"
